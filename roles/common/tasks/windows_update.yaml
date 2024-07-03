@@ -1,0 +1,22 @@
+---
+- name: Update Windows Server
+  hosts: windows
+  gather_facts: yes
+  tasks:
+  block:
+    - name: Set timezone (Windows)
+      ansible.windows.win_timezone:
+        timezone: "Eastern Standard Time"
+      when: ansible_facts['os_family'] == 'Windows'
+
+    - name: Install all available updates
+      win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+        reboot: yes
+      register: update_result
+
+    - name: Reboot if required
+      win_reboot:
+      when: update_result.reboot_required

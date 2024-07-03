@@ -1,0 +1,29 @@
+---
+- name: Set timezone (Linux)
+  ansible.builtin.command:
+    cmd: timedatectl set-timezone America/New_York
+  when: ansible_facts['os_family'] != 'Windows'
+
+- name: Update packages on various Linux distributions
+  tasks:
+  block:
+    - name: Update apt packages (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Update yum packages (RedHat/CentOS/Amazon Linux)
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat" or ansible_os_family == "Amazon"
+
+    - name: Update dnf packages (RedHat/CentOS/Amazon Linux 8+)
+      dnf:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8
+  gather_facts: yes
+  hosts: linux
+  become: true

@@ -1,0 +1,4 @@
+[windows]
+#windows_host ansible_host=your_windows_host_ip ansible_user=your_username ansible_password=your_password ansible_connection=winrm ansible_winrm_transport=basic ansible_winrm_server_cert_validation=ignore
+
+[linux]

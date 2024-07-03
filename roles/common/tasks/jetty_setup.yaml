@@ -1,0 +1,17 @@
+---
+- name: Set JETTY_HOME environment variables (Linux)
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    line: "JETTY_HOME=/webapps/jetty-home"
+  when: ansible_facts['os_family'] != 'Windows'
+  
+- name: Ensure a appuser is present (Linux)
+  ansible.builtin.user:
+    name: appuser
+    state: present
+  when: ansible_facts['os_family'] != 'Windows'  
+
+  gather_facts: no
+  hosts: linux
+  become: true
+
